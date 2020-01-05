@@ -9,6 +9,8 @@ endif(COMMAND cmake_policy)
 
 project(PractRand C CXX)
 
+include(FindThreads)
+
 add_library(
     practrand
     STATIC
@@ -41,10 +43,10 @@ add_library(
 target_include_directories(practrand PUBLIC include)
 
 add_executable(RNG_benchmark tools/RNG_benchmark.cpp)
-target_link_libraries(RNG_benchmark PRIVATE practrand pthread)
+target_link_libraries(RNG_benchmark PRIVATE practrand Threads::Threads)
 
 add_executable(RNG_output tools/RNG_output.cpp)
-target_link_libraries(RNG_output PRIVATE practrand pthread)
+target_link_libraries(RNG_output PRIVATE practrand Threads::Threads)
 
 add_executable(RNG_test tools/RNG_test.cpp)
-target_link_libraries(RNG_test PRIVATE practrand pthread)
+target_link_libraries(RNG_test PRIVATE practrand Threads::Threads)
