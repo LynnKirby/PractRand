@@ -1770,7 +1770,7 @@ void  PractRand::Tests::Rep16::get_results(std::vector<TestResult> &results) {
 		counts2[v]++;
 	}
 	for (unsigned long i = 0; i < counts2.size(); i++) {
-		std::printf("%d: %d\n", i, counts2[i]);
+		std::printf("%lu: %d\n", i, counts2[i]);
 	}
 }
 
@@ -9736,9 +9736,12 @@ void PractRand::Tests::LPerm16::get_results(std::vector<TestResult> &results) {
 	for (int i = 0; i < fact8; i++) {
 		Uint8 rawperm[8];
 		Uint8 used = 0;
+// Zero-length printf does nothing. Not sure what the author meant to do.
+#if 0
 		if (i == 1736) {
 			std::printf("");
 		}
+#endif
 		int u = i;
 		int d;
 		for (int x = 0; x < 8; x++) {
