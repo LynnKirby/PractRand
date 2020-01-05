@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Lynn's PractRand
+Upstream-Contact: Lynn Kirby <lynn@arrak.is>
+Source: https://github.com/LynnKirby/PractRand
+
+Files: src/* include/* tools/* doc/*
+Copyright: 2019 Chris Doty-Humphrey
+License: LicenseRef-practrand

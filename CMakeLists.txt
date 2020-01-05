@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: CC0-1.0
+# SPDX-FileCopyrightText: 2020 Lynn Kirby
+
 cmake_minimum_required(VERSION 3.16)
 
 if(COMMAND cmake_policy)
