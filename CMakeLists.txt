@@ -11,6 +11,32 @@ project(PractRand C CXX)
 
 include(FindThreads)
 
+#
+# Handle build options.
+#
+
+# Enable warnings by default if we're a standalone project. Disable them if
+# we're built as a subdirectory.
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    set(enable_warnings ON)
+else()
+    set(enable_warnings OFF)
+endif()
+
+set(PRACTRAND_ENABLE_WARNINGS enable_warnings CACHE BOOL "Enable warnings.")
+
+if(NOT PRACTRAND_ENABLE_WARNINGS)
+    if(MSVC)
+        add_compile_options(/w)
+    else()
+        add_compile_options(-w)
+    endif()
+endif()
+
+#
+# Main library.
+#
+
 add_library(
     practrand
     STATIC
@@ -42,11 +68,11 @@ add_library(
 
 target_include_directories(practrand PUBLIC include)
 
-add_executable(RNG_benchmark tools/RNG_benchmark.cpp)
-target_link_libraries(RNG_benchmark PRIVATE practrand Threads::Threads)
+#
+# Test executables.
+#
 
-add_executable(RNG_output tools/RNG_output.cpp)
-target_link_libraries(RNG_output PRIVATE practrand Threads::Threads)
-
-add_executable(RNG_test tools/RNG_test.cpp)
-target_link_libraries(RNG_test PRIVATE practrand Threads::Threads)
+foreach(exe IN ITEMS benchmark output test)
+    add_executable(RNG_${exe} tools/RNG_${exe}.cpp)
+    target_link_libraries(RNG_${exe} PRIVATE practrand Threads::Threads)
+endforeach()
