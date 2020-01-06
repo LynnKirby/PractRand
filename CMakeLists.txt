@@ -23,7 +23,7 @@ else()
     set(enable_warnings OFF)
 endif()
 
-set(PRACTRAND_ENABLE_WARNINGS enable_warnings CACHE BOOL "Enable warnings.")
+set(PRACTRAND_ENABLE_WARNINGS ${enable_warnings} CACHE BOOL "Enable warnings.")
 
 if(NOT PRACTRAND_ENABLE_WARNINGS)
     if(MSVC)
