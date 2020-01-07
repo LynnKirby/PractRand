@@ -11,6 +11,13 @@ project(PractRand C CXX)
 
 include(FindThreads)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
 #
 # Handle build options.
 #
@@ -25,11 +32,16 @@ endif()
 
 set(PRACTRAND_ENABLE_WARNINGS ${enable_warnings} CACHE BOOL "Enable warnings.")
 
+add_library(practrand_build_config INTERFACE)
+
 if(NOT PRACTRAND_ENABLE_WARNINGS)
     if(MSVC)
-        add_compile_options(/w)
+        # With MSVC, C4244 is being emitted from an STL include file even though
+        # we're suppressing all errors with /w. clang-cl doesn't give the
+        # warning but adding /wd4244 is safe.
+        target_compile_options(practrand_build_config INTERFACE /w /wd4244)
     else()
-        add_compile_options(-w)
+        target_compile_options(practrand_build_config INTERFACE -w)
     endif()
 endif()
 
@@ -63,10 +75,10 @@ add_library(
     src/RNGs/other/indirection.cpp
     src/RNGs/other/mult.cpp
     src/RNGs/other/simple.cpp
-    src/RNGs/other/transform.cpp
-)
+    src/RNGs/other/transform.cpp)
 
 target_include_directories(practrand PUBLIC include)
+target_link_libraries(practrand PRIVATE practrand_build_config)
 
 #
 # Test executables.
@@ -74,5 +86,11 @@ target_include_directories(practrand PUBLIC include)
 
 foreach(exe IN ITEMS benchmark output test)
     add_executable(RNG_${exe} tools/RNG_${exe}.cpp)
-    target_link_libraries(RNG_${exe} PRIVATE practrand Threads::Threads)
+
+    target_link_libraries(
+        RNG_${exe}
+        PRIVATE
+        practrand_build_config
+        practrand
+        Threads::Threads)
 endforeach()
